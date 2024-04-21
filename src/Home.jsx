@@ -2,25 +2,28 @@ import React, { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { BsClipboard2Check } from "react-icons/bs";
 import { RxUpdate } from "react-icons/rx";
-import ReactPaginate from 'react-paginate';
+import ReactPaginate from "react-paginate";
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
 
 const Home = () => {
-
   const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [completed, setCompleted] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
 
   const itemsPerPage = 3;
-const offset = currentPage * itemsPerPage;
-const paginatedItems = tasks.slice(offset, offset + itemsPerPage);
+  const offset = currentPage * itemsPerPage;
+  const paginatedItems = tasks.slice(offset, offset + itemsPerPage);
 
   useEffect(() => {
     fetch("http://localhost:2120/tasks")
       .then((res) => res.json())
-      .then((data) => setTasks(data));
+      .then((data) => {
+        setTasks(data);
+        setLoading(false);
+      });
   }, [tasks]);
 
   useEffect(() => {
@@ -109,8 +112,14 @@ const paginatedItems = tasks.slice(offset, offset + itemsPerPage);
   };
 
   return (
-    <div className="bg-[#0D0714] w-full mx-auto min-h-screen flex flex-col items-center justify-center font-raleway">
-      <h1 className="text-3xl font-medium text-white my-5">Task Machine</h1>
+    <>
+    {
+        loading ?  <div className='w-full min-h-screen bg-transparent flex items-center justify-center'>
+        <div className="bg-transparent w-16 h-16 border-4 border-dashed rounded-full animate-spin dark:border-[#9E78CF]"></div>
+      </div>
+        : 
+        <div className="bg-[#0D0714] w-full mx-auto min-h-screen flex flex-col items-center justify-center font-raleway">
+      <h1 className="text-3xl font-medium text-white my-5">Task Manager</h1>
       <form
         onSubmit={handleTaskAdd}
         className="flex items-center justify-center gap-5 w-[60%] mx-auto"
@@ -160,7 +169,7 @@ const paginatedItems = tasks.slice(offset, offset + itemsPerPage);
             </span>
           </div>
         ) : (
-            paginatedItems.map((task) => (
+          paginatedItems.map((task) => (
             <form
               onSubmit={(e) => handleUpdateTask(e, task._id)}
               key={task._id}
@@ -232,42 +241,42 @@ const paginatedItems = tasks.slice(offset, offset + itemsPerPage);
         )}
       </div>
 
-      {
-        tasks.length > 0 && (
-            <ReactPaginate
-        previousLabel={"Previous"}
-        nextLabel={"Next"}
-        breakLabel={"..."}
-        breakClassName={"break-me"}
-        pageCount={Math.ceil(tasks.length / itemsPerPage)}
-        marginPagesDisplayed={5}
-        pageRangeDisplayed={2}
-        onPageChange={handlePageChange}
-        containerClassName={
-          "flex justify-center gap-3 items-center font-poppins text-xs"
-        }
-        activeClassName={
-          "bg-transparent border border-[#9E78CF] text-white rounded-lg font-medium py-2"
-        }
-        pageLinkClassName={
-          "bg-transparent text-white rounded-lg font-medium px-3 py-2"
-        }
-        previousLinkClassName={
-          "bg-[#15101C] text-white lg:px-4 px-3 text-xs lg:text-base py-2 rounded-lg font-medium"
-        }
-        nextLinkClassName={
-          "bg-[#15101C] text-white lg:px-4 px-3 text-xs lg:text-base py-2 rounded-lg font-medium"
-        }
-        disabledClassName={"pointer-events-none opacity-50"}
-      />
-        )
-      }
-      <Toaster position="top-right" reverseOrder={true} />
+      {tasks.length > 0 && (
+        <ReactPaginate
+          previousLabel={"Previous"}
+          nextLabel={"Next"}
+          breakLabel={"..."}
+          breakClassName={"break-me"}
+          pageCount={Math.ceil(tasks.length / itemsPerPage)}
+          marginPagesDisplayed={5}
+          pageRangeDisplayed={2}
+          onPageChange={handlePageChange}
+          containerClassName={
+            "flex justify-center gap-3 items-center font-poppins text-xs"
+          }
+          activeClassName={
+            "bg-transparent border border-[#9E78CF] text-white rounded-lg font-medium py-2"
+          }
+          pageLinkClassName={
+            "bg-transparent text-white rounded-lg font-medium px-3 py-2"
+          }
+          previousLinkClassName={
+            "bg-[#15101C] text-white lg:px-4 px-3 text-xs lg:text-base py-2 rounded-lg font-medium"
+          }
+          nextLinkClassName={
+            "bg-[#15101C] text-white lg:px-4 px-3 text-xs lg:text-base py-2 rounded-lg font-medium"
+          }
+          disabledClassName={"pointer-events-none opacity-50"}
+        />
+      )}
+    </div>
+    }
+          <Toaster position="top-right" reverseOrder={true} />
       <Tooltip id="update" />
       <Tooltip id="delete" />
       <Tooltip id="complete" />
       <Tooltip id="edit" />
-    </div>
+    </>
   );
 };
 
