@@ -18,7 +18,7 @@ const Home = () => {
   const paginatedItems = tasks.slice(offset, offset + itemsPerPage);
 
   useEffect(() => {
-    fetch("http://localhost:2120/tasks")
+    fetch("https://task-management-backend-three-green.vercel.app/tasks")
       .then((res) => res.json())
       .then((data) => {
         setTasks(data);
@@ -37,7 +37,7 @@ const Home = () => {
     const task = e.target.task.value;
     const status = false;
     const tasks = { task, status };
-    fetch("http://localhost:2120/tasks", {
+    fetch("https://task-management-backend-three-green.vercel.app/tasks", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -55,7 +55,7 @@ const Home = () => {
   };
 
   const handleDeleteTask = (id) => {
-    fetch(`http://localhost:2120/tasks/${id}`, {
+    fetch(`https://task-management-backend-three-green.vercel.app/tasks/${id}`, {
       method: "DELETE",
     })
       .then((res) => res.json())
@@ -71,7 +71,7 @@ const Home = () => {
   const handleMarkComplete = (id) => {
     const status = { status: true };
 
-    fetch(`http://localhost:2120/tasks/${id}`, {
+    fetch(`https://task-management-backend-three-green.vercel.app/tasks/${id}`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",
@@ -91,7 +91,7 @@ const Home = () => {
     e.preventDefault();
     const taskText = e.target.taskText.value;
 
-    fetch(`http://localhost:2120/tasks/${id}`, {
+    fetch(`https://task-management-backend-three-green.vercel.app/tasks/${id}`, {
       method: "PATCH",
       headers: {
         "content-type": "application/json",
@@ -146,21 +146,21 @@ const Home = () => {
           </svg>
         </button>
       </form>
-      <div className="w-[60%] mx-auto mt-20 flex items-center justify-between">
+      <div className="lg:w-[60%] w-[90%] mx-auto mt-20 flex items-center justify-between">
         <div className="w-full flex items-center gap-3">
-          <span className="text-white font-medium text-lg">Task Created</span>
+          <span className="text-white font-medium lg:text-lg text-sm">Task Created</span>
           <span className="bg-[#9E78CF] h-7 w-7 text-white font-bold rounded-full flex items-center justify-center">
             {tasks.length}
           </span>
         </div>
         <div className="w-full flex items-center gap-3 justify-end">
-          <span className="text-white font-medium text-lg">Task Completed</span>
-          <span className="bg-[#9E78CF] px-4 py-2 text-white font-bold rounded-full flex items-center justify-center">
+          <span className="text-white font-medium lg:text-lg text-sm">Task Completed</span>
+          <span className="bg-[#9E78CF] lg:px-4 px-2 py-2 text-white font-bold rounded-md lg:rounded-full flex items-center justify-center lg:text-base text-sm">
             {completed} of {tasks.length}
           </span>
         </div>
       </div>
-      <div className="w-[60%] mx-auto flex flex-col items-center justify-center my-10">
+      <div className="lg:w-[60%] w-[90%] mx-auto flex flex-col items-center justify-center my-10">
         {tasks.length === 0 ? (
           <div className="flex items-center justify-center w-full flex-col gap-5">
             <BsClipboard2Check className="text-5xl text-[#9E78CF]" />
